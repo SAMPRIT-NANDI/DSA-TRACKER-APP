@@ -37,29 +37,30 @@ A comprehensive tracking system to help you prepare for TCS interviews with 50 d
 
 ## 🚦 How to Run
 
-### Option 1: React/HTML Version (Recommended - Opens in Browser)
+### Option 1: Streamlit Cloud (Recommended - No Setup!)
+Deploy to Streamlit Cloud with one click:
+1. Go to https://share.streamlit.io
+2. Connect your GitHub account
+3. Select repository: `SAMPRIT-NANDI/DSA-TRACKER-APP`
+4. Main file: `app.py`
+5. Click **Deploy!**
 
-Simply open `index.html` in your web browser:
+### Option 2: Run Locally
 
+```bash
+# Clone the repository
+git clone https://github.com/SAMPRIT-NANDI/DSA-TRACKER-APP.git
+cd DSA-TRACKER-APP
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the app
+streamlit run app.py
 ```
-Open index.html in Chrome/Firefox/Edge
-```
 
-### Option 2: Streamlit Version (Python)
-
-1. **Install Python** (if not installed)
-
-2. **Install Streamlit**:
-   ```bash
-   pip install streamlit
-   ```
-
-3. **Run the App**:
-   ```bash
-   streamlit run app.py
-   ```
-
-4. Open `http://localhost:8501` in your browser
+### Option 3: React/HTML Version
+Open `index.html` in your browser.
 
 ## 📱 Features Overview
 
