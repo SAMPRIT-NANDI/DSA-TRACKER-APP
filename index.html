@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA 50-Day TCS Tracker</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <style>
+        :root {
+            --primary: #0D47A1;
+            --secondary: #1565C0;
+            --accent: #00E676;
+            --warning: #FF9800;
+            --bg-dark: #0A0E17;
+            --card-bg: #1A1F2E;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0BEC5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--card-bg) 100%);
+            min-height: 100vh;
+            position: fixed;
+            padding: 20px;
+            left: 0;
+            top: 0;
+        }
+        
+        .logo {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+        
+        .logo h2 {
+            background: linear-gradient(90deg, var(--accent), #00B0FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+        }
+        
+        .logo p {
+            color: var(--text-secondary);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .streak-display {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .streak-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--accent);
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .streak-label {
+            color: var(--text-secondary);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .nav-menu {
+            margin-top: 30px;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin: 8px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background: rgba(0, 230, 118, 0.1);
+            color: var(--accent);
+        }
+        
+        .nav-item i {
+            font-size: 20px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 30px;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        .header h1 {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(90deg, var(--accent), #00B0FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 42px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            color: var(--text-secondary);
+            font-size: 18px;
+            margin-top: 10px;
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--card-bg) 0%, #2D3548 100%);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 230, 118, 0.15);
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent);
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+        
+        /* Progress Bar */
+        .progress-section {
+            margin: 40px 0;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .progress-label {
+            color: var(--text-secondary);
+        }
+        
+        .progress-value {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        .progress-container {
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            height: 30px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, var(--accent), #00B0FF);
+            height: 100%;
+            border-radius: 20px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #000;
+            font-size: 14px;
+        }
+        
+        /* Category Cards */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .category-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(0, 230, 118, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .category-card:hover {
+            border-color: rgba(0, 230, 118, 0.3);
+            transform: translateY(-3px);
+        }
+        
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .category-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .category-progress {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        /* Problem List */
+        .problem-list {
+            margin-top: 15px;
+        }
+        
+        .problem-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            margin: 8px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .problem-item:hover {
+            background: rgba(0, 230, 118, 0.05);
+        }
+        
+        .problem-item.completed {
+            background: rgba(0, 230, 118, 0.1);
+            border-left: 3px solid var(--accent);
+        }
+        
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--accent);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .checkbox.checked {
+            background: var(--accent);
+            color: #000;
+        }
+        
+        .problem-link {
+            flex: 1;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+        
+        .problem-link:hover {
+            color: var(--accent);
+        }
+        
+        .problem-link.completed {
+            color: var(--accent);
+            text-decoration: line-through;
+        }
+        
+        .topic-tag {
+            background: rgba(255, 152, 0, 0.2);
+            color: var(--warning);
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+        
+        /* Achievements */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .achievement-card {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            color: #000;
+            transition: all 0.3s ease;
+        }
+        
+        .achievement-card.locked {
+            background: #2D3548;
+            color: #666;
+        }
+        
+        .achievement-card:hover:not(.locked) {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+        
+        .achievement-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        
+        .achievement-name {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .achievement-desc {
+            font-size: 11px;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+        
+        /* Day Slider */
+        .day-selector {
+            margin: 30px 0;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 16px;
+        }
+        
+        .day-selector label {
+            display: block;
+            margin-bottom: 15px;
+            color: var(--text-secondary);
+        }
+        
+        .slider-container {
+            position: relative;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 230, 118, 0.5);
+        }
+        
+        .day-display {
+            text-align: center;
+            margin-top: 20px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            color: var(--accent);
+        }
+        
+        /* Calendar */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 8px;
+            margin: 20px 0;
+        }
+        
+        .calendar-day {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.05);
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .calendar-day.completed {
+            background: var(--accent);
+            color: #000;
+        }
+        
+        .calendar-day.today {
+            border: 2px solid var(--accent);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                min-height: auto;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--card-bg);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--accent), #00B0FF);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        
+        // DSA Problems Data
+        const DSA_PROBLEMS = {
+            "Number System": {
+                days: [1, 2, 3, 4, 5, 6, 7, 8],
+                problems: [
+                    {day: 1, title: "Sum of Fibonacci Numbers", link: "https://www.geeksforgeeks.org/sum-fibonacci-numbers/", topic: "Fibonacci"},
+                    {day: 1, title: "Sum of Array Elements", link: "https://www.geeksforgeeks.org/program-find-sum-elements-given-array/", topic: "Sum"},
+                    {day: 2, title: "Armstrong Numbers", link: "https://www.geeksforgeeks.org/problems/armstrong-numbers2727/1", topic: "Armstrong"},
+                    {day: 2, title: "Palindrome Number", link: "https://www.geeksforgeeks.org/problems/palindrome0746/1", topic: "Palindrome"},
+                    {day: 3, title: "Check Large Number Divisible by 9", link: "https://www.geeksforgeeks.org/check-large-number-divisible-9-not/", topic: "Divisibility"},
+                    {day: 3, title: "Leap Year", link: "https://www.geeksforgeeks.org/problems/leap-year0943/1", topic: "Leap Year"},
+                    {day: 4, title: "Floating Point - Even or Odd", link: "https://www.geeksforgeeks.org/problems/floating-point-number-even-or-odd0146/1", topic: "Math Operations"},
+                    {day: 4, title: "Area of Intersection of Two Circles", link: "https://www.geeksforgeeks.org/problems/area-of-intersection-of-two-circles0653/1", topic: "Math Operations"},
+                    {day: 5, title: "Odd or Even", link: "https://www.geeksforgeeks.org/problems/odd-or-even3618/1", topic: "Math Operations"},
+                    {day: 5, title: "Perfect Number", link: "https://www.geeksforgeeks.org/perfect-number/", topic: "Math Operations"},
+                    {day: 6, title: "Maximum Product of Three Numbers", link: "https://leetcode.com/problems/maximum-product-of-three-numbers/description/", topic: "Advanced Math"},
+                    {day: 6, title: "Power of Two", link: "https://leetcode.com/problems/power-of-two/description/", topic: "Advanced Math"},
+                    {day: 7, title: "Pow(x, n)", link: "https://leetcode.com/problems/powx-n/description/", topic: "Advanced Math"},
+                    {day: 7, title: "Swap Two Numbers", link: "https://www.geeksforgeeks.org/problems/swap-two-numbers3844/1", topic: "Basic Operations"},
+                    {day: 8, title: "Climbing Stairs", link: "https://leetcode.com/problems/climbing-stairs/description/", topic: "Dynamic Programming"},
+                    {day: 8, title: "Find All Factors of a Number", link: "https://www.geeksforgeeks.org/find-all-factors-of-a-natural-number-in-sorted-order/", topic: "Advanced Math"},
+                    {day: 8, title: "Convert Number to Hexadecimal", link: "https://leetcode.com/problems/convert-a-number-to-hexadecimal/description/", topic: "Advanced Math"},
+                    {day: 8, title: "Happy Number", link: "https://leetcode.com/problems/happy-number/description/", topic: "Advanced Math"},
+                ]
+            },
+            "Array and String": {
+                days: Array.from({length: 20}, (_, i) => i + 9),
+                problems: [
+                    {day: 9, title: "Sum of Array Elements", link: "https://www.geeksforgeeks.org/program-find-sum-elements-given-array/", topic: "Basic Array"},
+                    {day: 9, title: "Remove Duplicates from Sorted Array", link: "https://leetcode.com/problems/remove-duplicates-from-sorted-array/description/", topic: "Basic Array"},
+                    {day: 10, title: "Subarray Sum Equals K", link: "https://leetcode.com/problems/subarray-sum-equals-k/description/", topic: "Sliding Window"},
+                    {day: 10, title: "Count All Paths", link: "https://www.geeksforgeeks.org/problems/count-all-possible-paths-from-top-left-to-bottom-right3011/1", topic: "Basic Array"},
+                    {day: 11, title: "Find Second Largest Element", link: "https://www.geeksforgeeks.org/find-second-largest-element-array/", topic: "Finding Elements"},
+                    {day: 11, title: "Majority Element", link: "https://www.geeksforgeeks.org/problems/majority-element-1587115620/1", topic: "Finding Elements"},
+                    {day: 12, title: "Sort an Array of 0s, 1s and 2s", link: "https://www.geeksforgeeks.org/problems/sort-an-array-of-0s-1s-and-2s4231/1", topic: "Sorting"},
+                    {day: 12, title: "Number of Good Pairs", link: "https://leetcode.com/problems/number-of-good-pairs/description/", topic: "Sorting"},
+                    {day: 13, title: "Rotate Array", link: "https://leetcode.com/problems/rotate-array/description/", topic: "Transformation"},
+                    {day: 13, title: "Single Number", link: "https://leetcode.com/problems/single-number/description/", topic: "Transformation"},
+                    {day: 14, title: "Sliding Window Maximum", link: "https://www.geeksforgeeks.org/sliding-window-maximum-maximum-of-all-subarrays-of-size-k/", topic: "Sliding Window"},
+                    {day: 15, title: "Mean and Median of Array", link: "https://www.geeksforgeeks.org/program-for-mean-and-median-of-an-unsorted-array/", topic: "Finding Elements"},
+                    {day: 15, title: "Next Greater Element I", link: "https://leetcode.com/problems/next-greater-element-i/description/", topic: "Finding Elements"},
+                    {day: 16, title: "Union of Two Sorted Arrays", link: "https://www.geeksforgeeks.org/problems/union-of-two-sorted-arrays-1587115621/1", topic: "Finding Elements"},
+                    {day: 16, title: "Pascal's Triangle", link: "https://leetcode.com/problems/pascals-triangle/description/", topic: "2D Arrays"},
+                    {day: 17, title: "Set Matrix Zeroes", link: "https://leetcode.com/problems/set-matrix-zeroes/description/", topic: "2D Arrays"},
+                    {day: 17, title: "Rotate Image", link: "https://leetcode.com/problems/rotate-image/description/", topic: "2D Arrays"},
+                    {day: 18, title: "Spiral Matrix", link: "https://leetcode.com/problems/spiral-matrix/description/", topic: "2D Arrays"},
+                    {day: 18, title: "Best Time to Buy and Sell Stock", link: "https://leetcode.com/problems/best-time-to-buy-and-sell-stock/description/", topic: "Array"},
+                    {day: 19, title: "Two Sum", link: "https://leetcode.com/problems/two-sum/description/", topic: "Finding Elements"},
+                    {day: 19, title: "Find and Replace in String", link: "https://www.geeksforgeeks.org/problems/find-an-replace-in-string/1", topic: "String Operations"},
+                    {day: 20, title: "Remove Characters from First String", link: "https://www.geeksforgeeks.org/remove-characters-from-the-first-string-which-are-present-in-the-second-string/", topic: "String Operations"},
+                    {day: 20, title: "Find Common Characters", link: "https://leetcode.com/problems/find-common-characters/description/", topic: "String Operations"},
+                    {day: 21, title: "Reverse a String", link: "https://www.geeksforgeeks.org/reverse-a-string-in-java/", topic: "String Operations"},
+                    {day: 21, title: "Reverse Words in a String", link: "https://leetcode.com/problems/reverse-words-in-a-string/", topic: "String Operations"},
+                    {day: 22, title: "Print Characters in Order of Occurrence", link: "https://www.geeksforgeeks.org/print-characters-frequencies-order-occurrence/", topic: "String Operations"},
+                    {day: 22, title: "Largest Odd Number in String", link: "https://leetcode.com/problems/largest-odd-number-in-string/", topic: "String Operations"},
+                    {day: 23, title: "Longest Common Prefix", link: "https://leetcode.com/problems/longest-common-prefix/", topic: "String Operations"},
+                    {day: 23, title: "Count Binary Substrings", link: "https://leetcode.com/problems/count-binary-substrings/description/", topic: "String Operations"},
+                    {day: 24, title: "Rotate String", link: "https://leetcode.com/problems/rotate-string/description/", topic: "String Operations"},
+                    {day: 24, title: "Valid Anagram", link: "https://leetcode.com/problems/valid-anagram/description/", topic: "String Operations"},
+                    {day: 25, title: "Excel Sheet Column Number", link: "https://leetcode.com/problems/excel-sheet-column-number/description/", topic: "String Operations"},
+                    {day: 25, title: "Count Unique Characters of All Substrings", link: "https://leetcode.com/problems/count-unique-characters-of-all-substrings-of-a-given-string/description/", topic: "String Operations"},
+                    {day: 26, title: "Check Palindrome String", link: "https://www.geeksforgeeks.org/c-program-check-given-string-palindrome/", topic: "String Operations"},
+                    {day: 26, title: "Implement strStr()", link: "https://www.geeksforgeeks.org/problems/implement-strstr/1", topic: "String Operations"},
+                    {day: 27, title: "Sort Characters By Frequency", link: "https://leetcode.com/problems/sort-characters-by-frequency/description/", topic: "String Operations"},
+                    {day: 27, title: "Roman to Integer", link: "https://leetcode.com/problems/roman-to-integer/description/", topic: "String Operations"},
+                    {day: 28, title: "Count Number of Substrings", link: "https://www.geeksforgeeks.org/problems/count-number-of-substrings4528/1", topic: "String Operations"},
+                ]
+            },
+            "Sorting": {
+                days: Array.from({length: 7}, (_, i) => i + 29),
+                problems: [
+                    {day: 29, title: "Selection Sort", link: "https://www.geeksforgeeks.org/problems/selection-sort/1", topic: "Selection Sort"},
+                    {day: 30, title: "Bubble Sort", link: "https://www.geeksforgeeks.org/problems/bubble-sort/1", topic: "Bubble Sort"},
+                    {day: 31, title: "Insertion Sort", link: "https://www.geeksforgeeks.org/problems/insertion-sort/1", topic: "Insertion Sort"},
+                    {day: 32, title: "Merge Sort", link: "https://www.geeksforgeeks.org/problems/merge-sort/1", topic: "Merge Sort"},
+                    {day: 33, title: "Quick Sort", link: "https://www.geeksforgeeks.org/problems/quick-sort/1", topic: "Quick Sort"},
+                ]
+            },
+            "Searching": {
+                days: Array.from({length: 10}, (_, i) => i + 36),
+                problems: [
+                    {day: 36, title: "Linear Search", link: "https://www.geeksforgeeks.org/linear-search/", topic: "Linear Search"},
+                    {day: 36, title: "Binary Search", link: "https://leetcode.com/problems/binary-search/description/", topic: "Binary Search"},
+                    {day: 37, title: "Floor in a Sorted Array", link: "https://www.geeksforgeeks.org/problems/floor-in-a-sorted-array-1587115620/1", topic: "Binary Search"},
+                    {day: 37, title: "Ceil the Floor", link: "https://www.geeksforgeeks.org/problems/ceil-the-floor2802/0", topic: "Binary Search"},
+                    {day: 38, title: "Search Insert Position", link: "https://leetcode.com/problems/search-insert-position/description/", topic: "Binary Search"},
+                    {day: 38, title: "Koko Eating Bananas", link: "https://leetcode.com/problems/koko-eating-bananas/description/", topic: "Advanced Binary Search"},
+                    {day: 39, title: "Search in Rotated Sorted Array", link: "https://leetcode.com/problems/search-in-rotated-sorted-array/description/", topic: "Rotated Array"},
+                    {day: 39, title: "Search in Rotated Sorted Array II", link: "https://leetcode.com/problems/search-in-rotated-sorted-array-ii/description/", topic: "Rotated Array"},
+                    {day: 40, title: "Find Minimum in Rotated Sorted Array", link: "https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/description/", topic: "Rotated Array"},
+                    {day: 40, title: "Find Peak Element", link: "https://leetcode.com/problems/find-peak-element/description/", topic: "Advanced Binary Search"},
+                ]
+            },
+            "Revision & Mock Tests": {
+                days: Array.from({length: 5}, (_, i) => i + 46),
+                problems: [
+                    {day: 46, title: "Full Revision - Number System", link: "#", topic: "Full Revision"},
+                    {day: 47, title: "Full Revision - Array & String", link: "#", topic: "Full Revision"},
+                    {day: 48, title: "Full Revision - Sorting & Searching", link: "#", topic: "Full Revision"},
+                    {day: 49, title: "Mock Test 1", link: "#", topic: "Practice Tests"},
+                    {day: 50, title: "Mock Test 2", link: "#", topic: "Practice Tests"},
+                ]
+            }
+        };
+        
+        // Achievements Data
+        const ACHIEVEMENTS = {
+            first_blood: { name: "First Blood", description: "Complete your first problem", icon: "🎯" },
+            on_fire: { name: "On Fire", description: "7-day streak", icon: "🔥" },
+            dedicated: { name: "Dedicated", description: "30-day streak", icon: "💪" },
+            perfectionist: { name: "Perfectionist", description: "Complete all 50 days", icon: "🏆" },
+            number_master: { name: "Number Master", description: "Complete all Number System problems", icon: "🔢" },
+            array_warrior: { name: "Array Warrior", description: "Complete all Array problems", icon: "⚔️" },
+            sorting_expert: { name: "Sorting Expert", description: "Complete all Sorting problems", icon: "📊" },
+            search_master: { name: "Search Master", description: "Complete all Searching problems", icon: "🔍" },
+            early_bird: { name: "Early Bird", description: "Complete 5 problems before day 10", icon: "🌅" },
+            consistent: { name: "Consistent", description: "Study for 14 consecutive days", icon: "📈" }
+        };
+        
+        // Main App Component
+        function App() {
+            const [currentPage, setCurrentPage] = useState('Dashboard');
+            const [completedProblems, setCompletedProblems] = useState(() => {
+                const saved = localStorage.getItem('dsa_completed');
+                return saved ? JSON.parse(saved) : [];
+            });
+            const [streak, setStreak] = useState(() => {
+                const saved = localStorage.getItem('dsa_streak');
+                return saved ? parseInt(saved) : 0;
+            });
+            const [achievements, setAchievements] = useState(() => {
+                const saved = localStorage.getItem('dsa_achievements');
+                return saved ? JSON.parse(saved) : [];
+            });
+            const [selectedDay, setSelectedDay] = useState(1);
+            
+            // Save to localStorage
+            useEffect(() => {
+                localStorage.setItem('dsa_completed', JSON.stringify(completedProblems));
+            }, [completedProblems]);
+            
+            useEffect(() => {
+                localStorage.setItem('dsa_streak', streak.toString());
+            }, [streak]);
+            
+            useEffect(() => {
+                localStorage.setItem('dsa_achievements', JSON.stringify(achievements));
+            }, [achievements]);
+            
+            // Calculate total problems
+            const totalProblems = Object.values(DSA_PROBLEMS).reduce((sum, cat) => sum + cat.problems.length, 0);
+            const completedCount = completedProblems.length;
+            const progress = (completedCount / totalProblems) * 100;
+            
+            // Toggle problem completion
+            const toggleProblem = (problemKey) => {
+                if (completedProblems.includes(problemKey)) {
+                    setCompletedProblems(completedProblems.filter(p => p !== problemKey));
+                } else {
+                    setCompletedProblems([...completedProblems, problemKey]);
+                    // Increment streak
+                    setStreak(streak + 1);
+                    // Check achievements
+                    checkAchievements([...completedProblems, problemKey]);
+                }
+            };
+            
+            // Check achievements
+            const checkAchievements = (completed) => {
+                const newAchievements = [];
+                
+                if (completed.length >= 1 && !achievements.includes('first_blood')) {
+                    newAchievements.push('first_blood');
+                }
+                if (streak >= 7 && !achievements.includes('on_fire')) {
+                    newAchievements.push('on_fire');
+                }
+                if (completed.length >= 50 && !achievements.includes('perfectionist')) {
+                    newAchievements.push('perfectionist');
+                }
+                
+                if (newAchievements.length > 0) {
+                    setAchievements([...achievements, ...newAchievements]);
+                }
+            };
+            
+            // Render Dashboard
+            const renderDashboard = () => (
+                <div className="fade-in">
+                    <div className="header">
+                        <h1>🚀 Welcome to Your 50-Day DSA Journey!</h1>
+                        <p>Track your progress to ace TCS interviews</p>
+                    </div>
+                    
+                    <div className="stats-grid">
+                        <div className="stat-card">
+                            <div className="stat-value">{completedCount}/{totalProblems}</div>
+                            <div className="stat-label">Problems Completed</div>
+                        </div>
+                        <div className="stat-card">
+                            <div className="stat-value">{Math.floor(progress / 2)}/50</div>
+                            <div className="stat-label">Days Completed</div>
+                        </div>
+                        <div className="stat-card">
+                            <div className="stat-value">🔥 {streak}</div>
+                            <div className="stat-label">Current Streak</div>
+                        </div>
+                        <div className="stat-card">
+                            <div className="stat-value">{achievements.length}/{Object.keys(ACHIEVEMENTS).length}</div>
+                            <div className="stat-label">Achievements</div>
+                        </div>
+                    </div>
+                    
+                    <div className="progress-section">
+                        <div className="progress-header">
+                            <span className="progress-label">Overall Progress</span>
+                            <span className="progress-value">{progress.toFixed(1)}%</span>
+                        </div>
+                        <div className="progress-container">
+                            <div className="progress-bar" style={{width: `${progress}%`}}>
+                                {progress.toFixed(1)}%
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h2 style={{marginTop: '40px', marginBottom: '20px'}}>📚 Category Progress</h2>
+                    <div className="category-grid">
+                        {Object.entries(DSA_PROBLEMS).map(([category, data]) => {
+                            const catCompleted = data.problems.filter(p => 
+                                completedProblems.includes(`${category}::${p.title}`)
+                            ).length;
+                            const catProgress = (catCompleted / data.problems.length) * 100;
+                            
+                            return (
+                                <div key={category} className="category-card">
+                                    <div className="category-header">
+                                        <span className="category-title">📖 {category}</span>
+                                        <span className="category-progress">{catCompleted}/{data.problems.length}</span>
+                                    </div>
+                                    <div className="progress-container" style={{height: '8px'}}>
+                                        <div className="progress-bar" style={{width: `${catProgress}%`}}></div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                    
+                    <h2 style={{marginTop: '40px', marginBottom: '20px'}}>🏆 Achievements</h2>
+                    <div className="achievements-grid">
+                        {Object.entries(ACHIEVEMENTS).map(([key, achievement]) => (
+                            <div key={key} className={`achievement-card ${achievements.includes(key) ? '' : 'locked'}`}>
+                                <div className="achievement-icon">
+                                    {achievements.includes(key) ? achievement.icon : '🔒'}
+                                </div>
+                                <div className="achievement-name">{achievement.name}</div>
+                                <div className="achievement-desc">{achievement.description}</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+            
+            // Render Daily Plan
+            const renderDailyPlan = () => {
+                let currentCategory = '';
+                let currentProblems = [];
+                
+                for (const [category, data] of Object.entries(DSA_PROBLEMS)) {
+                    const dayProblems = data.problems.filter(p => p.day === selectedDay);
+                    if (dayProblems.length > 0) {
+                        currentCategory = category;
+                        currentProblems = dayProblems;
+                        break;
+                    }
+                }
+                
+                return (
+                    <div className="fade-in">
+                        <div className="header">
+                            <h1>📅 Daily Study Plan</h1>
+                            <p>Follow this plan to complete DSA in 50 days</p>
+                        </div>
+                        
+                        <div className="day-selector">
+                            <label>Select Day</label>
+                            <div className="slider-container">
+                                <input 
+                                    type="range" 
+                                    min="1" 
+                                    max="50" 
+                                    value={selectedDay}
+                                    onChange={(e) => setSelectedDay(parseInt(e.target.value))}
+                                />
+                            </div>
+                            <div className="day-display">Day {selectedDay}</div>
+                        </div>
+                        
+                        {currentCategory && (
+                            <div className="category-card" style={{marginTop: '20px'}}>
+                                <div className="category-header">
+                                    <span className="category-title">📚 {currentCategory} - Day {selectedDay}</span>
+                                </div>
+                                
+                                <div className="problem-list">
+                                    {currentProblems.map((problem) => {
+                                        const problemKey = `${currentCategory}::${problem.title}`;
+                                        const isCompleted = completedProblems.includes(problemKey);
+                                        
+                                        return (
+                                            <div key={problemKey} className={`problem-item ${isCompleted ? 'completed' : ''}`}>
+                                                <div 
+                                                    className={`checkbox ${isCompleted ? 'checked' : ''}`}
+                                                    onClick={() => toggleProblem(problemKey)}
+                                                >
+                                                    {isCompleted && <i className="ph ph-check"></i>}
+                                                </div>
+                                                <span className="topic-tag">{problem.topic}</span>
+                                                <a 
+                                                    href={problem.link} 
+                                                    target="_blank" 
+                                                    className={`problem-link ${isCompleted ? 'completed' : ''}`}
+                                                >
+                                                    {problem.title}
+                                                </a>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                );
+            };
+            
+            // Render Progress
+            const renderProgress = () => (
+                <div className="fade-in">
+                    <div className="header">
+                        <h1>📈 Your Progress</h1>
+                        <p>Track your journey day by day</p>
+                    </div>
+                    
+                    <div className="progress-section">
+                        <div className="progress-header">
+                            <span className="progress-label">Overall Completion</span>
+                            <span className="progress-value">{progress.toFixed(1)}%</span>
+                        </div>
+                        <div className="progress-container">
+                            <div className="progress-bar" style={{width: `${progress}%`}}>
+                                {progress.toFixed(1)}%
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h2 style={{marginTop: '40px', marginBottom: '20px'}}>📅 Activity Calendar</h2>
+                    <div className="calendar-grid">
+                        {Array.from({length: 50}, (_, i) => i + 1).map(day => {
+                            let isCompleted = false;
+                            for (const [category, data] of Object.entries(DSA_PROBLEMS)) {
+                                if (data.problems.some(p => p.day === day && completedProblems.includes(`${category}::${p.title}`))) {
+                                    isCompleted = true;
+                                    break;
+                                }
+                            }
+                            return (
+                                <div key={day} className={`calendar-day ${isCompleted ? 'completed' : ''} ${day === selectedDay ? 'today' : ''}`}>
+                                    {day}
+                                </div>
+                            );
+                        })}
+                    </div>
+                    
+                    <h2 style={{marginTop: '40px', marginBottom: '20px'}}>✅ Completed Problems</h2>
+                    {completedProblems.length === 0 ? (
+                        <p style={{color: 'var(--text-secondary)'}}>No problems completed yet. Start solving!</p>
+                    ) : (
+                        <div className="problem-list">
+                            {completedProblems.map(problemKey => {
+                                const [category, title] = problemKey.split('::');
+                                return (
+                                    <div key={problemKey} className="problem-item completed">
+                                        <span className="problem-link">{title} ({category})</span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+            );
+            
+            // Render Achievements
+            const renderAchievements = () => (
+                <div className="fade-in">
+                    <div className="header">
+                        <h1>🏆 Achievements</h1>
+                        <p>Unlock badges by completing challenges</p>
+                    </div>
+                    
+                    <div className="achievements-grid">
+                        {Object.entries(ACHIEVEMENTS).map(([key, achievement]) => (
+                            <div key={key} className={`achievement-card ${achievements.includes(key) ? '' : 'locked'}`}>
+                                <div className="achievement-icon">
+                                    {achievements.includes(key) ? achievement.icon : '🔒'}
+                                </div>
+                                <div className="achievement-name">{achievement.name}</div>
+                                <div className="achievement-desc">{achievement.description}</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+            
+            return (
+                <div className="app">
+                    {/* Sidebar */}
+                    <div className="sidebar">
+                        <div className="logo">
+                            <h2>🎯 DSA TRACKER</h2>
+                            <p>50 Days TCS Prep</p>
+                        </div>
+                        
+                        <div className="streak-display">
+                            <div className="streak-value">🔥 {streak}</div>
+                            <div className="streak-label">Day Streak</div>
+                        </div>
+                        
+                        <div className="nav-menu">
+                            {[
+                                {id: 'Dashboard', icon: '📊'},
+                                {id: 'Daily Plan', icon: '📅'},
+                                {id: 'Progress', icon: '📈'},
+                                {id: 'Achievements', icon: '🏆'}
+                            ].map(page => (
+                                <div 
+                                    key={page.id}
+                                    className={`nav-item ${currentPage === page.id ? 'active' : ''}`}
+                                    onClick={() => setCurrentPage(page.id)}
+                                >
+                                    <i className={`ph ${page.icon.includes('Dashboard') ? 'ph-house' : 
+                                        page.icon.includes('Daily') ? 'ph-calendar' :
+                                        page.icon.includes('Progress') ? 'ph-chart-line' :
+                                        'ph-trophy'}`}></i>
+                                    {page.icon} {page.id}
+                                </div>
+                            ))}
+                        </div>
+                        
+                        <div style={{marginTop: '40px', padding: '15px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px'}}>
+                            <p style={{margin: 0, color: 'var(--text-secondary)', fontSize: '12px'}}>Overall Progress</p>
+                            <div style={{fontSize: '24px', fontWeight: '700', color: 'var(--accent)'}}>{progress.toFixed(1)}%</div>
+                        </div>
+                    </div>
+                    
+                    {/* Main Content */}
+                    <div className="main-content">
+                        {currentPage === 'Dashboard' && renderDashboard()}
+                        {currentPage === 'Daily Plan' && renderDailyPlan()}
+                        {currentPage === 'Progress' && renderProgress()}
+                        {currentPage === 'Achievements' && renderAchievements()}
+                    </div>
+                </div>
+            );
+        }
+        
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>
+
